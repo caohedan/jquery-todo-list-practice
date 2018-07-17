@@ -39,7 +39,4 @@ $(document)
             }
         });
 
-        $("a[data-filter='all']").click(function(){
-            $("li").each.attr({ class: "checked"});
-        });
     });
