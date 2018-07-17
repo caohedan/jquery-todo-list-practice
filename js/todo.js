@@ -23,19 +23,23 @@ $(document)
 
         // code to be implemented
         $("#button").click(function(){
-                var input = $(".input-text").val();
-                var add =" <li  class=\"\"><input name=\"done-todo\" type=\"checkbox\" class=\"done-todo\"> "+ input+"</li>";
-            $("ol").append(add);
+                let uuid=generateUUID();
+                let input = $(".input-text").val();
+                if(input != "")
+                {
+                    let add ="<li id="+uuid+" class=''><input name='done-todo' type='checkbox' class='done-todo'>"+input+"</li>";
+                    $("ol").append(add);
+                }
         });
-        $("input[name='done-todo']").click(function(){
-            var type = $(this).parent().attr("class");
-            // alert(type);
-            if(type =="")
-            {
-                $(this).parent().attr({ class: "checked"});
+        $( "body" ).on( "click",".done-todo", function() {
+            if($(this).parent().hasClass("checked")){
+                $(this).parent().removeClass("checked");
+            }else{
+                $(this).parent().addClass("checked");
             }
-            else{
-                $(this).parent().attr({ class: ""});
-            }
+        });
+
+        $("a[data-filter='all']").click(function(){
+            $("li").each.attr({ class: "checked"});
         });
     });
