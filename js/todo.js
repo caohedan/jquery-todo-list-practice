@@ -22,4 +22,20 @@ $(document)
         }
 
         // code to be implemented
+        $("#button").click(function(){
+                var input = $(".input-text").val();
+                var add =" <li  class=\"\"><input name=\"done-todo\" type=\"checkbox\" class=\"done-todo\"> "+ input+"</li>";
+            $("ol").append(add);
+        });
+        $("input[name='done-todo']").click(function(){
+            var type = $(this).parent().attr("class");
+            // alert(type);
+            if(type =="")
+            {
+                $(this).parent().attr({ class: "checked"});
+            }
+            else{
+                $(this).parent().attr({ class: ""});
+            }
+        });
     });
