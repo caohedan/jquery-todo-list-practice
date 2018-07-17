@@ -1,6 +1,66 @@
 $(document)
     .ready(function () {
+        const todoForm = {
+            todos : [],
+            statusOfList:"all"
+        }
+        function filterByStatus(todos,status) {
+            const filterExecuter = {
+                all(){
+                    return true;
+                },
+                active(element){
+                    return !element.complete;
+                },
+                complete(element){
+                    return element.complete;
+                }
+            }
+            const result = todos.filter(filterExecuter[status]);
+            return result;
 
+        }
+        const buildHTML =(todoForm) =>{
+            let todoViewItem = (element) =>`<li  class="${element.complete ? "checked":""}">
+            <input name="done-todo" type="checkbox" class="done-todo"> ${element.name}</li>`
+            let todoList =`   
+        <div>
+            <input class="input-text" type="text" name="ListItem" data-com.agilebits.onepassword.user-edited="yes">
+    <div id="button"  onclick="addItem()">Add</div>
+    </div>
+    <br>
+    <ol>
+        ${filterByStatus(todoForm.todos, todoForm.statusOfList).map(todoViewItem).join("")}
+    </ol>
+    <div>
+        <ul id="filters">
+            <li>
+                <a href="#" data-filter="all" class="selected">ALL</a>
+            </li>
+            <li>
+                <a href="#" data-filter="active" class="">Active</a>
+            </li>
+            <li>
+                <a href="#" data-filter="complete" class="">Complete</a>
+            </li>
+        </ul>
+
+    </div>`
+            return todoList;
+        }
+
+        window.addItem = (event) => {
+            var toAdd = $('input[name=ListItem]').val();
+
+            todoForm.todos.push({ id: generateUUID(), name: toAdd, complete: false });
+
+            render();
+        }
+        const render = () => {
+            $('#todoForm').html(buildHTML(todoForm));
+        }
+
+        render();
         function generateUUID() {
             /*jshint bitwise:false */
             var i,
@@ -22,33 +82,5 @@ $(document)
         }
 
         // code to be implemented
-        $("#button").click(function(){
-                let uuid=generateUUID();
-                let input = $(".input-text").val();
-                if(input != "")
-                {
-                    let add ="<li id="+uuid+" class=''><input name='done-todo' type='checkbox' class='done-todo'>"+input+"</li>";
-                    $("ol").append(add);
-                }
-        });
-        $( "body" ).on( "click",".done-todo", function() {
-            if($(this).parent().hasClass("checked")){
-                $(this).parent().removeClass("checked");
-            }else{
-                $(this).parent().addClass("checked");
-            }
-        });
 
-
-        $(document).on("click", "ol li", function () {
-            $(this).attr('contentEditable', 'true');
-        });
-
-        $("a[data-filter = active]").click(function(){
-            $("ol li.checked").css("display", "none");
-        });
-
-        $("a[data-filter = all]").click(function(){
-            $("ol li.checked").css("display", "");
-        });
     });
