@@ -39,4 +39,16 @@ $(document)
             }
         });
 
+
+        $(document).on("click", "ol li", function () {
+            $(this).attr('contentEditable', 'true');
+        });
+
+        $("a[data-filter = active]").click(function(){
+            $("ol li.checked").css("display", "none");
+        });
+
+        $("a[data-filter = all]").click(function(){
+            $("ol li.checked").css("display", "");
+        });
     });
