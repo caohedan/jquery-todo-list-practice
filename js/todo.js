@@ -20,28 +20,30 @@ $(document)
             return result;
 
         }
+        // ${filterByStatus(todoForm.todos, todoForm.statusOfList).map( todoViewItem).join("")}
         const buildHTML =(todoForm) =>{
-            let todoViewItem = (element) =>`<li  class="${element.complete ? "checked":""}">
-            <input name="done-todo" type="checkbox" class="done-todo"> ${element.name}</li>`
+
+            let todoViewItem = (element) =>`<li  ondblclick="edit(event, '${element.id}')" class="${element.complete ? "checked":""}">
+            <input name="done-todo" type="checkbox" ${element.complete ? 'checked' : ""} class="done-todo" onchange="checkItem('${element.id}')"> ${element.name}</li>`
             let todoList =`   
         <div>
-            <input class="input-text" type="text" name="ListItem" data-com.agilebits.onepassword.user-edited="yes">
+            <input   class="input-text" type="text" name="ListItem" data-com.agilebits.onepassword.user-edited="yes">
     <div id="button"  onclick="addItem()">Add</div>
     </div>
     <br>
     <ol>
-        ${filterByStatus(todoForm.todos, todoForm.statusOfList).map(todoViewItem).join("")}
+        ${filterByStatus(todoForm.todos,todoForm.statusOfList).map(todoViewItem).join("")}
     </ol>
     <div>
         <ul id="filters">
             <li>
-                <a href="#" data-filter="all" class="selected">ALL</a>
+                <a href="#" data-filter="all" onclick="showListByStatus('all')" class="selected">ALL</a>
             </li>
             <li>
-                <a href="#" data-filter="active" class="">Active</a>
+                <a href="#" data-filter="active"  onclick="showListByStatus('active')" class="">Active</a>
             </li>
             <li>
-                <a href="#" data-filter="complete" class="">Complete</a>
+                <a href="#" data-filter="complete" onclick="showListByStatus('complete')" class="">Complete</a>
             </li>
         </ul>
 
@@ -61,6 +63,38 @@ $(document)
         }
 
         render();
+        window.checkItem = (id) => {
+            let item = todoForm.todos.find(x=>(x.id == id) );
+            if(item !== undefined){
+                item.complete = !item.complete;
+            }
+            render();
+        }
+        window.showListByStatus = (status) => {
+            todoForm.statusOfList = status;
+            render();
+
+        };
+        window.edit= (event, id) => {
+            $(event.target).attr('contentEditable', 'true')
+                .focus()
+                .keypress(function (event) {
+                    var keycode = (event.keyCode
+                        ? event.keyCode
+                        : event.which);
+
+                    if (keycode == '13') {
+                        todoForm.todos.find(x=>(x.id == id)).name = $(event.target).text();
+                        render();
+                    }
+
+                })
+                .mousemove(function (event){
+                    todoForm.todos.find(x=>(x.id == id)).name = $(event.target).text();
+                    render();
+                })
+        }
+
         function generateUUID() {
             /*jshint bitwise:false */
             var i,
